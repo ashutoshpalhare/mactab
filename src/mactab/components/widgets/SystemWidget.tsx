@@ -32,10 +32,8 @@ export function SystemWidget() {
     };
   }, []);
 
-  // @ts-expect-error non standard
   const cores = navigator.hardwareConcurrency ?? "—";
-  // @ts-expect-error non standard
-  const mem = navigator.deviceMemory ?? "—";
+  const mem = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? "—";
 
   return (
     <DraggableWidget id="system" minWidth={280}>
