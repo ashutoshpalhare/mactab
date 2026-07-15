@@ -1,12 +1,48 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { X, Minus, Square } from "lucide-react";
 import { useWindows, type WindowState } from "../windows";
 import { APPS } from "../apps";
 
+type SnapZone = "left" | "right" | "top" | "tl" | "tr" | "bl" | "br" | null;
+
+function zoneRect(zone: SnapZone) {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const TOP = 28;
+  switch (zone) {
+    case "left": return { x: 0, y: TOP, w: W / 2, h: H - TOP };
+    case "right": return { x: W / 2, y: TOP, w: W / 2, h: H - TOP };
+    case "top": return { x: 0, y: TOP, w: W, h: H - TOP };
+    case "tl": return { x: 0, y: TOP, w: W / 2, h: (H - TOP) / 2 };
+    case "tr": return { x: W / 2, y: TOP, w: W / 2, h: (H - TOP) / 2 };
+    case "bl": return { x: 0, y: TOP + (H - TOP) / 2, w: W / 2, h: (H - TOP) / 2 };
+    case "br": return { x: W / 2, y: TOP + (H - TOP) / 2, w: W / 2, h: (H - TOP) / 2 };
+    default: return null;
+  }
+}
+
+function detectZone(x: number, y: number): SnapZone {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const E = 12; // edge threshold
+  const C = 60; // corner threshold
+  const topCorner = y < 28 + C;
+  const botCorner = y > H - C;
+  if (x < E && topCorner) return "tl";
+  if (x > W - E && topCorner) return "tr";
+  if (x < E && botCorner) return "bl";
+  if (x > W - E && botCorner) return "br";
+  if (y < 32) return "top";
+  if (x < E) return "left";
+  if (x > W - E) return "right";
+  return null;
+}
+
 export function AppWindow({ w }: { w: WindowState }) {
   const { close, focus, update, toggleMax, minimize } = useWindows();
   const dragRef = useRef<{ x: number; y: number; wx: number; wy: number } | null>(null);
+  const [snapZone, setSnapZone] = useState<SnapZone>(null);
   const app = APPS.find((a) => a.id === w.appId);
   if (!app || !app.component) return null;
   const Comp = app.component;
@@ -21,11 +57,20 @@ export function AppWindow({ w }: { w: WindowState }) {
         x: Math.max(0, dragRef.current.wx + ev.clientX - dragRef.current.x),
         y: Math.max(28, dragRef.current.wy + ev.clientY - dragRef.current.y),
       });
+      setSnapZone(detectZone(ev.clientX, ev.clientY));
     };
-    const up = () => {
+    const up = (ev: MouseEvent) => {
+      const zone = detectZone(ev.clientX, ev.clientY);
       dragRef.current = null;
+      setSnapZone(null);
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseup", up);
+      if (zone === "top") {
+        toggleMax(w.id);
+        return;
+      }
+      const rect = zoneRect(zone);
+      if (rect) update(w.id, { x: rect.x, y: rect.y, w: rect.w, h: rect.h, maximized: false });
     };
     window.addEventListener("mousemove", move);
     window.addEventListener("mouseup", up);
