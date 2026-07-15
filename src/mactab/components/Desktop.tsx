@@ -73,9 +73,9 @@ export function Desktop() {
         style={{ background: wp.gradient, backgroundSize: "cover" }}
       />
       <div className="absolute inset-0 bg-black/10 dark:bg-black/30" />
-      <div data-no-context><MenuBar onSpotlight={() => setSpotlight(true)} /></div>
+      <MenuBar onSpotlight={() => setSpotlight(true)} />
 
-      <div className="absolute inset-0 pt-7" data-no-context>
+      <div className="absolute inset-0 pt-7">
         <ClockWidget />
         <WeatherWidget />
         <CalendarWidget />
@@ -87,15 +87,11 @@ export function Desktop() {
 
       <AnimatePresence>
         {windows.map((w) => (
-          <div key={w.id} data-no-context>
-            <AppWindow w={w} />
-          </div>
+          <AppWindow key={w.id} w={w} />
         ))}
       </AnimatePresence>
 
-      <div data-no-context>
-        <Dock />
-      </div>
+      <Dock />
       <Spotlight open={spotlight} onClose={() => setSpotlight(false)} />
       <DesktopContextMenu />
 
