@@ -13,6 +13,7 @@ import { QuoteWidget } from "./widgets/QuoteWidget";
 import { TodosWidget } from "./widgets/TodosWidget";
 import { SystemWidget } from "./widgets/SystemWidget";
 import { Stickies } from "./Stickies";
+import { DesktopContextMenu } from "./DesktopContextMenu";
 
 export function Desktop() {
   const wallpaper = useStore((s) => s.wallpaper);
