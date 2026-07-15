@@ -67,15 +67,15 @@ export function Desktop() {
   const wp = WALLPAPERS[wallpaper];
 
   return (
-    <div ref={rootRef} className="fixed inset-0 overflow-hidden">
+    <div ref={rootRef} data-desktop-root className="fixed inset-0 overflow-hidden">
       <div
         className={`absolute inset-0 ${animated ? "wallpaper-animated" : ""}`}
         style={{ background: wp.gradient, backgroundSize: "cover" }}
       />
       <div className="absolute inset-0 bg-black/10 dark:bg-black/30" />
-      <MenuBar onSpotlight={() => setSpotlight(true)} />
+      <div data-no-context><MenuBar onSpotlight={() => setSpotlight(true)} /></div>
 
-      <div className="absolute inset-0 pt-7">
+      <div className="absolute inset-0 pt-7" data-no-context>
         <ClockWidget />
         <WeatherWidget />
         <CalendarWidget />
@@ -87,12 +87,17 @@ export function Desktop() {
 
       <AnimatePresence>
         {windows.map((w) => (
-          <AppWindow key={w.id} w={w} />
+          <div key={w.id} data-no-context>
+            <AppWindow w={w} />
+          </div>
         ))}
       </AnimatePresence>
 
-      <Dock />
+      <div data-no-context>
+        <Dock />
+      </div>
       <Spotlight open={spotlight} onClose={() => setSpotlight(false)} />
+      <DesktopContextMenu />
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
