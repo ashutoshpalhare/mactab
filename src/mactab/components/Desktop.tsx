@@ -72,7 +72,7 @@ export function Desktop() {
         className={`absolute inset-0 ${animated ? "wallpaper-animated" : ""}`}
         style={{ background: wp.gradient, backgroundSize: "cover" }}
       />
-      <div className="absolute inset-0 bg-black/10 dark:bg-black/30" />
+      <div data-desktop-empty className="absolute inset-0 bg-black/10 dark:bg-black/30" />
       <MenuBar onSpotlight={() => setSpotlight(true)} />
 
       <div className="absolute inset-0 pt-7">

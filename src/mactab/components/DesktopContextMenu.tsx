@@ -21,15 +21,25 @@ export function DesktopContextMenu() {
   useEffect(() => {
     const onCtx = (e: MouseEvent) => {
       const el = e.target as HTMLElement;
-      // Only trigger on empty desktop (not inside windows, dock, widgets)
-      if (el.closest("[data-desktop-root]") && !el.closest("[data-no-context]")) {
-        e.preventDefault();
-        const x = Math.min(e.clientX, window.innerWidth - 240);
-        const y = Math.min(e.clientY, window.innerHeight - 320);
-        setPos({ x, y });
-        setSubmenu(null);
-      }
+      // Only fire when the click lands on the empty desktop backdrop
+      if (!el.hasAttribute("data-desktop-empty")) return;
+      e.preventDefault();
+      const x = Math.min(e.clientX, window.innerWidth - 240);
+      const y = Math.min(e.clientY, window.innerHeight - 320);
+      setPos({ x, y });
+      setSubmenu(null);
     };
+    const onClick = () => setPos(null);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPos(null);
+    window.addEventListener("contextmenu", onCtx);
+    window.addEventListener("click", onClick);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("contextmenu", onCtx);
+      window.removeEventListener("click", onClick);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, []);
     const onClick = () => setPos(null);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPos(null);
     window.addEventListener("contextmenu", onCtx);
