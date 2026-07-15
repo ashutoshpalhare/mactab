@@ -21,21 +21,45 @@ import {
 } from "lucide-react";
 import { lazy } from "react";
 
-const NotesApp = lazy(() => import("./apps/NotesApp"));
-const CalculatorApp = lazy(() => import("./apps/CalculatorApp"));
-const CalendarApp = lazy(() => import("./apps/CalendarApp"));
-const ClockApp = lazy(() => import("./apps/ClockApp"));
-const PomodoroApp = lazy(() => import("./apps/PomodoroApp"));
-const SettingsApp = lazy(() => import("./apps/SettingsApp"));
-const SpeedDialApp = lazy(() => import("./apps/SpeedDialApp"));
-const TodosApp = lazy(() => import("./apps/TodosApp"));
-const WeatherApp = lazy(() => import("./apps/WeatherApp"));
-const ClipboardApp = lazy(() => import("./apps/ClipboardApp"));
-const MusicApp = lazy(() => import("./apps/MusicApp"));
-const AIHubApp = lazy(() => import("./apps/AIHubApp"));
-const GoogleAppsApp = lazy(() => import("./apps/GoogleAppsApp"));
-const UtilitiesApp = lazy(() => import("./apps/UtilitiesApp"));
-const TrashApp = lazy(() => import("./apps/TrashApp"));
+const loaders: Record<string, () => Promise<unknown>> = {
+  notes: () => import("./apps/NotesApp"),
+  calculator: () => import("./apps/CalculatorApp"),
+  calendar: () => import("./apps/CalendarApp"),
+  clock: () => import("./apps/ClockApp"),
+  pomodoro: () => import("./apps/PomodoroApp"),
+  settings: () => import("./apps/SettingsApp"),
+  speeddial: () => import("./apps/SpeedDialApp"),
+  finder: () => import("./apps/SpeedDialApp"),
+  todos: () => import("./apps/TodosApp"),
+  weather: () => import("./apps/WeatherApp"),
+  clipboard: () => import("./apps/ClipboardApp"),
+  music: () => import("./apps/MusicApp"),
+  ai: () => import("./apps/AIHubApp"),
+  google: () => import("./apps/GoogleAppsApp"),
+  utilities: () => import("./apps/UtilitiesApp"),
+  trash: () => import("./apps/TrashApp"),
+};
+
+export function preloadApp(id: string) {
+  loaders[id]?.();
+}
+
+const NotesApp = lazy(loaders.notes as () => Promise<{ default: React.ComponentType }>);
+const CalculatorApp = lazy(loaders.calculator as () => Promise<{ default: React.ComponentType }>);
+const CalendarApp = lazy(loaders.calendar as () => Promise<{ default: React.ComponentType }>);
+const ClockApp = lazy(loaders.clock as () => Promise<{ default: React.ComponentType }>);
+const PomodoroApp = lazy(loaders.pomodoro as () => Promise<{ default: React.ComponentType }>);
+const SettingsApp = lazy(loaders.settings as () => Promise<{ default: React.ComponentType }>);
+const SpeedDialApp = lazy(loaders.speeddial as () => Promise<{ default: React.ComponentType }>);
+const TodosApp = lazy(loaders.todos as () => Promise<{ default: React.ComponentType }>);
+const WeatherApp = lazy(loaders.weather as () => Promise<{ default: React.ComponentType }>);
+const ClipboardApp = lazy(loaders.clipboard as () => Promise<{ default: React.ComponentType }>);
+const MusicApp = lazy(loaders.music as () => Promise<{ default: React.ComponentType }>);
+const AIHubApp = lazy(loaders.ai as () => Promise<{ default: React.ComponentType }>);
+const GoogleAppsApp = lazy(loaders.google as () => Promise<{ default: React.ComponentType }>);
+const UtilitiesApp = lazy(loaders.utilities as () => Promise<{ default: React.ComponentType }>);
+const TrashApp = lazy(loaders.trash as () => Promise<{ default: React.ComponentType }>);
+
 
 export interface AppDef {
   id: string;

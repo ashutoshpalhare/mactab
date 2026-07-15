@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { useStore } from "../store";
 import { useWindows } from "../windows";
-import { APPS } from "../apps";
+import { APPS, preloadApp } from "../apps";
 
 export function Dock() {
   const dockPosition = useStore((s) => s.dockPosition);
@@ -126,6 +126,8 @@ function DockIcon({
         if (el && !rect) setRect(el.getBoundingClientRect());
       }}
       onClick={onClick}
+      onMouseEnter={() => preloadApp(app.id)}
+      onFocus={() => preloadApp(app.id)}
       className="relative flex items-center justify-center rounded-2xl"
       style={{ width: 56, height: 56 }}
       whileHover={{ scale: 1.35, y: vertical ? 0 : -8, x: vertical ? (mouse === null ? 0 : 0) : 0 }}
