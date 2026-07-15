@@ -13,6 +13,7 @@ import { QuoteWidget } from "./widgets/QuoteWidget";
 import { TodosWidget } from "./widgets/TodosWidget";
 import { SystemWidget } from "./widgets/SystemWidget";
 import { Stickies } from "./Stickies";
+import { DesktopContextMenu } from "./DesktopContextMenu";
 
 export function Desktop() {
   const wallpaper = useStore((s) => s.wallpaper);
@@ -66,12 +67,12 @@ export function Desktop() {
   const wp = WALLPAPERS[wallpaper];
 
   return (
-    <div ref={rootRef} className="fixed inset-0 overflow-hidden">
+    <div ref={rootRef} data-desktop-root className="fixed inset-0 overflow-hidden">
       <div
         className={`absolute inset-0 ${animated ? "wallpaper-animated" : ""}`}
         style={{ background: wp.gradient, backgroundSize: "cover" }}
       />
-      <div className="absolute inset-0 bg-black/10 dark:bg-black/30" />
+      <div data-desktop-empty className="absolute inset-0 bg-black/10 dark:bg-black/30" />
       <MenuBar onSpotlight={() => setSpotlight(true)} />
 
       <div className="absolute inset-0 pt-7">
@@ -92,6 +93,7 @@ export function Desktop() {
 
       <Dock />
       <Spotlight open={spotlight} onClose={() => setSpotlight(false)} />
+      <DesktopContextMenu />
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
