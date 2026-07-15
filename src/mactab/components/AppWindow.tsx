@@ -129,6 +129,16 @@ export function AppWindow({ w }: { w: WindowState }) {
           <Comp />
         </Suspense>
       </div>
+      {snapZone && (() => {
+        const r = zoneRect(snapZone);
+        if (!r) return null;
+        return (
+          <div
+            className="snap-preview"
+            style={{ left: r.x, top: r.y, width: r.w, height: r.h, position: "fixed" }}
+          />
+        );
+      })()}
     </motion.div>
   );
 }
