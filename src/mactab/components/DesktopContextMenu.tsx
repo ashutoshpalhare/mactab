@@ -40,17 +40,6 @@ export function DesktopContextMenu() {
       window.removeEventListener("keydown", onKey);
     };
   }, []);
-    const onClick = () => setPos(null);
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPos(null);
-    window.addEventListener("contextmenu", onCtx);
-    window.addEventListener("click", onClick);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("contextmenu", onCtx);
-      window.removeEventListener("click", onClick);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, []);
 
   return (
     <AnimatePresence>
