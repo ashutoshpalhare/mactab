@@ -97,6 +97,10 @@ interface State {
   accent: string;
   dockPosition: "bottom" | "left" | "right";
   dockAutoHide: boolean;
+  dockHidden: string[];
+  dockMagnification: boolean;
+  dockSoundEnabled: boolean;
+  badges: Record<string, number>;
   notes: Note[];
   stickies: StickyNote[];
   todos: Todo[];
@@ -108,6 +112,10 @@ interface State {
   toggleAnimatedWallpaper: () => void;
   setDockPosition: (p: "bottom" | "left" | "right") => void;
   toggleDockAutoHide: () => void;
+  toggleDockMagnification: () => void;
+  toggleDockSound: () => void;
+  toggleDockPin: (appId: string) => void;
+  setBadge: (appId: string, count: number) => void;
   addNote: () => string;
   updateNote: (id: string, patch: Partial<Note>) => void;
   deleteNote: (id: string) => void;
@@ -122,6 +130,7 @@ interface State {
   setWidget: (id: string, patch: Partial<WidgetState>) => void;
   pushClipboard: (text: string) => void;
 }
+
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
