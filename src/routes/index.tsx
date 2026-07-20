@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Desktop } from "../mactab/components/Desktop";
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "MacTab OS — Premium New Tab Dashboard" },
