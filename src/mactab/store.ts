@@ -99,7 +99,11 @@ interface State {
   dockAutoHide: boolean;
   dockHidden: string[];
   dockMagnification: boolean;
+  dockMagnificationLevel: number;
+  dockSize: "small" | "medium" | "large";
+  dockShowRecents: boolean;
   dockSoundEnabled: boolean;
+  recentApps: string[];
   badges: Record<string, number>;
   notes: Note[];
   stickies: StickyNote[];
@@ -113,8 +117,12 @@ interface State {
   setDockPosition: (p: "bottom" | "left" | "right") => void;
   toggleDockAutoHide: () => void;
   toggleDockMagnification: () => void;
+  setDockMagnificationLevel: (n: number) => void;
+  setDockSize: (s: "small" | "medium" | "large") => void;
+  toggleDockShowRecents: () => void;
   toggleDockSound: () => void;
   toggleDockPin: (appId: string) => void;
+  pushRecentApp: (appId: string) => void;
   setBadge: (appId: string, count: number) => void;
   addNote: () => string;
   updateNote: (id: string, patch: Partial<Note>) => void;
@@ -147,7 +155,11 @@ export const useStore = create<State>()(
       dockAutoHide: false,
       dockHidden: [],
       dockMagnification: true,
+      dockMagnificationLevel: 1,
+      dockSize: "medium",
+      dockShowRecents: false,
       dockSoundEnabled: false,
+      recentApps: [],
       badges: {},
       notes: [
         {
@@ -188,12 +200,19 @@ export const useStore = create<State>()(
       setDockPosition: (dockPosition) => set({ dockPosition }),
       toggleDockAutoHide: () => set((s) => ({ dockAutoHide: !s.dockAutoHide })),
       toggleDockMagnification: () => set((s) => ({ dockMagnification: !s.dockMagnification })),
+      setDockMagnificationLevel: (dockMagnificationLevel) => set({ dockMagnificationLevel }),
+      setDockSize: (dockSize) => set({ dockSize }),
+      toggleDockShowRecents: () => set((s) => ({ dockShowRecents: !s.dockShowRecents })),
       toggleDockSound: () => set((s) => ({ dockSoundEnabled: !s.dockSoundEnabled })),
       toggleDockPin: (appId) =>
         set((s) => ({
           dockHidden: s.dockHidden.includes(appId)
             ? s.dockHidden.filter((x) => x !== appId)
             : [...s.dockHidden, appId],
+        })),
+      pushRecentApp: (appId) =>
+        set((s) => ({
+          recentApps: [appId, ...s.recentApps.filter((x) => x !== appId)].slice(0, 5),
         })),
       setBadge: (appId, count) =>
         set((s) => {

@@ -4,6 +4,8 @@ export default function SettingsApp() {
   const {
     theme, setTheme, wallpaper, setWallpaper, animatedWallpaper,
     toggleAnimatedWallpaper, dockPosition, setDockPosition, dockAutoHide, toggleDockAutoHide,
+    dockMagnification, toggleDockMagnification, dockMagnificationLevel, setDockMagnificationLevel,
+    dockSize, setDockSize, dockShowRecents, toggleDockShowRecents,
   } = useStore();
 
   return (
@@ -40,8 +42,35 @@ export default function SettingsApp() {
             ))}
           </div>
         </Row>
+        <Row label="Size">
+          <div className="flex gap-2">
+            {(["small","medium","large"] as const).map((s) => (
+              <button key={s} onClick={() => setDockSize(s)}
+                className={`px-3 py-1.5 rounded-lg text-sm capitalize ${dockSize===s?"bg-primary text-primary-foreground":"bg-white/10"}`}>{s}</button>
+            ))}
+          </div>
+        </Row>
+        <Row label="Magnification">
+          <Toggle on={dockMagnification} onClick={toggleDockMagnification} />
+        </Row>
+        {dockMagnification && (
+          <Row label="Magnification intensity">
+            <input
+              type="range"
+              min={0.3}
+              max={2}
+              step={0.05}
+              value={dockMagnificationLevel}
+              onChange={(e) => setDockMagnificationLevel(Number(e.target.value))}
+              className="w-40 accent-primary"
+            />
+          </Row>
+        )}
         <Row label="Auto-hide">
           <Toggle on={dockAutoHide} onClick={toggleDockAutoHide} />
+        </Row>
+        <Row label="Show recent apps">
+          <Toggle on={dockShowRecents} onClick={toggleDockShowRecents} />
         </Row>
       </Section>
       <Section title="Shortcuts">
