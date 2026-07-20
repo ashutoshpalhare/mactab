@@ -97,6 +97,10 @@ interface State {
   accent: string;
   dockPosition: "bottom" | "left" | "right";
   dockAutoHide: boolean;
+  dockHidden: string[];
+  dockMagnification: boolean;
+  dockSoundEnabled: boolean;
+  badges: Record<string, number>;
   notes: Note[];
   stickies: StickyNote[];
   todos: Todo[];
@@ -108,6 +112,10 @@ interface State {
   toggleAnimatedWallpaper: () => void;
   setDockPosition: (p: "bottom" | "left" | "right") => void;
   toggleDockAutoHide: () => void;
+  toggleDockMagnification: () => void;
+  toggleDockSound: () => void;
+  toggleDockPin: (appId: string) => void;
+  setBadge: (appId: string, count: number) => void;
   addNote: () => string;
   updateNote: (id: string, patch: Partial<Note>) => void;
   deleteNote: (id: string) => void;
@@ -123,6 +131,7 @@ interface State {
   pushClipboard: (text: string) => void;
 }
 
+
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 const stickyColors = ["#fde68a", "#fca5a5", "#a7f3d0", "#bfdbfe", "#f5d0fe"];
@@ -136,6 +145,10 @@ export const useStore = create<State>()(
       accent: "#5b6cff",
       dockPosition: "bottom",
       dockAutoHide: false,
+      dockHidden: [],
+      dockMagnification: true,
+      dockSoundEnabled: false,
+      badges: {},
       notes: [
         {
           id: uid(),
@@ -174,6 +187,22 @@ export const useStore = create<State>()(
         set((s) => ({ animatedWallpaper: !s.animatedWallpaper })),
       setDockPosition: (dockPosition) => set({ dockPosition }),
       toggleDockAutoHide: () => set((s) => ({ dockAutoHide: !s.dockAutoHide })),
+      toggleDockMagnification: () => set((s) => ({ dockMagnification: !s.dockMagnification })),
+      toggleDockSound: () => set((s) => ({ dockSoundEnabled: !s.dockSoundEnabled })),
+      toggleDockPin: (appId) =>
+        set((s) => ({
+          dockHidden: s.dockHidden.includes(appId)
+            ? s.dockHidden.filter((x) => x !== appId)
+            : [...s.dockHidden, appId],
+        })),
+      setBadge: (appId, count) =>
+        set((s) => {
+          const badges = { ...s.badges };
+          if (count <= 0) delete badges[appId];
+          else badges[appId] = count;
+          return { badges };
+        }),
+
 
       addNote: () => {
         const id = uid();
