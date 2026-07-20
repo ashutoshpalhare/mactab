@@ -99,7 +99,11 @@ interface State {
   dockAutoHide: boolean;
   dockHidden: string[];
   dockMagnification: boolean;
+  dockMagnificationLevel: number;
+  dockSize: "small" | "medium" | "large";
+  dockShowRecents: boolean;
   dockSoundEnabled: boolean;
+  recentApps: string[];
   badges: Record<string, number>;
   notes: Note[];
   stickies: StickyNote[];
@@ -113,8 +117,12 @@ interface State {
   setDockPosition: (p: "bottom" | "left" | "right") => void;
   toggleDockAutoHide: () => void;
   toggleDockMagnification: () => void;
+  setDockMagnificationLevel: (n: number) => void;
+  setDockSize: (s: "small" | "medium" | "large") => void;
+  toggleDockShowRecents: () => void;
   toggleDockSound: () => void;
   toggleDockPin: (appId: string) => void;
+  pushRecentApp: (appId: string) => void;
   setBadge: (appId: string, count: number) => void;
   addNote: () => string;
   updateNote: (id: string, patch: Partial<Note>) => void;
