@@ -145,6 +145,10 @@ export const useStore = create<State>()(
       accent: "#5b6cff",
       dockPosition: "bottom",
       dockAutoHide: false,
+      dockHidden: [],
+      dockMagnification: true,
+      dockSoundEnabled: false,
+      badges: {},
       notes: [
         {
           id: uid(),
@@ -183,6 +187,22 @@ export const useStore = create<State>()(
         set((s) => ({ animatedWallpaper: !s.animatedWallpaper })),
       setDockPosition: (dockPosition) => set({ dockPosition }),
       toggleDockAutoHide: () => set((s) => ({ dockAutoHide: !s.dockAutoHide })),
+      toggleDockMagnification: () => set((s) => ({ dockMagnification: !s.dockMagnification })),
+      toggleDockSound: () => set((s) => ({ dockSoundEnabled: !s.dockSoundEnabled })),
+      toggleDockPin: (appId) =>
+        set((s) => ({
+          dockHidden: s.dockHidden.includes(appId)
+            ? s.dockHidden.filter((x) => x !== appId)
+            : [...s.dockHidden, appId],
+        })),
+      setBadge: (appId, count) =>
+        set((s) => {
+          const badges = { ...s.badges };
+          if (count <= 0) delete badges[appId];
+          else badges[appId] = count;
+          return { badges };
+        }),
+
 
       addNote: () => {
         const id = uid();
