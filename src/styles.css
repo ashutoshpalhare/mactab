@@ -150,6 +150,30 @@
   transition: all 0.15s ease-out;
 }
 
+.dock-surface {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--glass) 70%, transparent) 0%,
+    color-mix(in oklch, var(--glass) 90%, transparent) 100%
+  );
+  backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid oklch(1 0 0 / 22%);
+  box-shadow:
+    0 24px 60px -12px oklch(0 0 0 / 45%),
+    0 2px 6px oklch(0 0 0 / 15%),
+    inset 0 1px 0 oklch(1 0 0 / 40%),
+    inset 0 0 0 1px oklch(1 0 0 / 5%),
+    inset 0 -1px 0 oklch(0 0 0 / 15%);
+}
+.dark .dock-surface {
+  background: linear-gradient(
+    180deg,
+    oklch(0.25 0.02 260 / 55%) 0%,
+    oklch(0.18 0.02 260 / 75%) 100%
+  );
+  border-color: oklch(1 0 0 / 12%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .wallpaper-animated { animation: none; }
   *, *::before, *::after {
